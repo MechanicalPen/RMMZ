@@ -1,6 +1,6 @@
 /*:
 @target MZ
-@plugindesc v0.1.xx - Theo's Battle Sequence Engine MZ.
+@plugindesc v0.1.20220228 - Theo's Battle Sequence Engine MZ.
 @help
 TBSE is spritesheet-based animation sequence plugin aiming for a free-frame 
 pick spritesheet animation sequencer. You are encouraged to use any kind 
@@ -121,17 +121,21 @@ the delay of each frame and all the timing on your own.
 @desc How many frames you need to wait until it completes its movement.
 
 @arg jump
-@text Jump / Arch power
+@text Jump (Max Height)
 @type number
 @default 0
 @min 0
-@desc Jump power. Higher number, higher jump.
+@desc Maximum height of the jump
 
-@arg movefn
-@type struct<movefunction>
-@text Movement Function
-@default {"x":"Linear","y":"Linear"}
-@desc Movement function
+@arg fn
+@type combo
+@text Function
+@option Linear
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
+@default Linear
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
 
 //========================================================================
 // * Command - Move to position (Target)
@@ -179,11 +183,21 @@ the delay of each frame and all the timing on your own.
 @desc How many frames you need to wait until it completes its movement.
 
 @arg jump
-@text Jump / Arch power
+@text Jump (Max Height)
 @type number
 @default 0
 @min 0
-@desc Jump power. Higher number, higher jump.
+@desc Maximum height of the jump
+
+@arg fn
+@type combo
+@text Function
+@option Linear
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
+@default Linear
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
 
 //========================================================================
 // * Command - Anchor Home
@@ -286,17 +300,17 @@ the delay of each frame and all the timing on your own.
 
 @arg duration
 @parent prjbasic
-@type number
+@type Text
 @text Duration
 @default 10
 @desc Travel duration. JS code is ok!
 
 @arg jump
 @parent prjbasic
-@type number
-@text Jump / Arch power
+@type Text
+@text Jump (Max Height)
 @default 0
-@desc Jump / Arch power
+@desc Maximum height of the arc path. JS code is ok!
 
 @arg type
 @parent prjbasic
@@ -356,12 +370,16 @@ the delay of each frame and all the timing on your own.
 @default {"start":"0","ending":"-1","trail":"0"}
 @desc Setup the start/ending animation and trailing animation
 
-@arg movefn
+@arg fn
+@type combo
 @parent prjadv
-@type struct<movefunction>
-@text Movement Function
-@default {"x":"Linear","y":"Linear"}
-@desc Movement function
+@text Function
+@option Linear
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
+@default Linear
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
 
 //========================================================================
 // * Command - Force result
@@ -596,6 +614,59 @@ If roll success/fail, it will affect all the next action effect until you reset 
 @default false
 @desc Set animation mirror here
 
+
+//========================================================================
+// * Command - Camera Move
+//========================================================================
+
+@command cam
+@text Camera - Move
+@desc Move the camera
+
+@arg to
+@type select
+@option User
+@option Target
+@option Center Screen
+@text Relative to
+@default Center Screen
+@desc Where do you want to shoot?
+
+@arg x
+@text X-Axis
+@type text
+@default 0
+@desc Relative X-Axis coordinate. JS syntax is ok
+
+@arg y
+@text Y-Axis
+@type text
+@default 0
+@desc Relative Y-Axis coordinate. JS syntax is ok
+
+@arg zoom
+@text Zoom
+@type text
+@default 1.0
+@desc Use decimal number on this one. JS code is ok!
+
+@arg dur
+@text Duration
+@type number
+@default 10
+@min 0
+@desc How many frames you need to wait until it completes its movement.
+
+@arg fn
+@type combo
+@text Function
+@option Linear
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
+@default Linear
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
+
 //========================================================================
 // * Command - Visible toggle
 //========================================================================
@@ -668,44 +739,14 @@ If roll success/fail, it will affect all the next action effect until you reset 
 @desc Duration to complete the resize. JS code is ok!
 
 @arg fnName
-@type select
-@text Change Function
+@type combo
+@text Function
 @option Linear
-
-@option -------------------
-
-@option Ease OUT (1 - Smooth Linear)
-@option Ease OUT (2 - Smoother Linear)
-@option Ease OUT (3 - Non-Linear)
-@option Ease OUT (4 - Fast)
-@option Ease OUT (5 - Faster)
-@option Ease OUT (6 - Fastest)
-@option Ease OUT (7 - Circular easing)
-@option Ease OUT (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN (1 - Smooth Linear)
-@option Ease IN (2 - Smoother Linear)
-@option Ease IN (3 - Non-Linear)
-@option Ease IN (4 - Fast)
-@option Ease IN (5 - Faster)
-@option Ease IN (6 - Fastest)
-@option Ease IN (7 - Circular easing)
-@option Ease IN (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN-OUT (1 - Smooth Linear)
-@option Ease IN-OUT (2 - Smoother Linear)
-@option Ease IN-OUT (3 - Non-Linear)
-@option Ease IN-OUT (4 - Fast)
-@option Ease IN-OUT (5 - Faster)
-@option Ease IN-OUT (6 - Fastest)
-@option Ease IN-OUT (7 - Circular easing)
-@option Ease IN-OUT (8 - Bounce back)
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
 @default Linear
-@desc Select whether to use linear or easing function
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
 
 //========================================================================
 // * Command - Rotation
@@ -736,44 +777,14 @@ If roll success/fail, it will affect all the next action effect until you reset 
 @desc Reset to 0 degree on finish.
 
 @arg fnName
-@type select
-@text Change Function
+@type combo
+@text Function
 @option Linear
-
-@option -------------------
-
-@option Ease OUT (1 - Smooth Linear)
-@option Ease OUT (2 - Smoother Linear)
-@option Ease OUT (3 - Non-Linear)
-@option Ease OUT (4 - Fast)
-@option Ease OUT (5 - Faster)
-@option Ease OUT (6 - Fastest)
-@option Ease OUT (7 - Circular easing)
-@option Ease OUT (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN (1 - Smooth Linear)
-@option Ease IN (2 - Smoother Linear)
-@option Ease IN (3 - Non-Linear)
-@option Ease IN (4 - Fast)
-@option Ease IN (5 - Faster)
-@option Ease IN (6 - Fastest)
-@option Ease IN (7 - Circular easing)
-@option Ease IN (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN-OUT (1 - Smooth Linear)
-@option Ease IN-OUT (2 - Smoother Linear)
-@option Ease IN-OUT (3 - Non-Linear)
-@option Ease IN-OUT (4 - Fast)
-@option Ease IN-OUT (5 - Faster)
-@option Ease IN-OUT (6 - Fastest)
-@option Ease IN-OUT (7 - Circular easing)
-@option Ease IN-OUT (8 - Bounce back)
+@option Smooth-Out
+@option Smooth-In
+@option Smooth-InOut
 @default Linear
-@desc Select whether to use linear or easing function
+@desc You can also type, for example 'inSine' to get specific function from https://easings.net/
 
 //========================================================================
 // * Command - Spinning
@@ -1179,90 +1190,6 @@ If roll success/fail, it will affect all the next action effect until you reset 
 @option Sub
 @default Follow Sprite
 @desc Select blend mode.
-
-*/
-
-/*~struct~movefunction:
-@param x
-@type select
-@text X Function
-@option Linear
-
-@option -------------------
-
-@option Ease OUT (1 - Smooth Linear)
-@option Ease OUT (2 - Smoother Linear)
-@option Ease OUT (3 - Non-Linear)
-@option Ease OUT (4 - Fast)
-@option Ease OUT (5 - Faster)
-@option Ease OUT (6 - Fastest)
-@option Ease OUT (7 - Circular easing)
-@option Ease OUT (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN (1 - Smooth Linear)
-@option Ease IN (2 - Smoother Linear)
-@option Ease IN (3 - Non-Linear)
-@option Ease IN (4 - Fast)
-@option Ease IN (5 - Faster)
-@option Ease IN (6 - Fastest)
-@option Ease IN (7 - Circular easing)
-@option Ease IN (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN-OUT (1 - Smooth Linear)
-@option Ease IN-OUT (2 - Smoother Linear)
-@option Ease IN-OUT (3 - Non-Linear)
-@option Ease IN-OUT (4 - Fast)
-@option Ease IN-OUT (5 - Faster)
-@option Ease IN-OUT (6 - Fastest)
-@option Ease IN-OUT (7 - Circular easing)
-@option Ease IN-OUT (8 - Bounce back)
-@default Linear
-@desc Select whether to use linear or easing function
-
-@param y
-@type select
-@text Y Function
-@option Linear
-
-@option -------------------
-
-@option Ease OUT (1 - Smooth Linear)
-@option Ease OUT (2 - Smoother Linear)
-@option Ease OUT (3 - Non-Linear)
-@option Ease OUT (4 - Fast)
-@option Ease OUT (5 - Faster)
-@option Ease OUT (6 - Fastest)
-@option Ease OUT (7 - Circular easing)
-@option Ease OUT (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN (1 - Smooth Linear)
-@option Ease IN (2 - Smoother Linear)
-@option Ease IN (3 - Non-Linear)
-@option Ease IN (4 - Fast)
-@option Ease IN (5 - Faster)
-@option Ease IN (6 - Fastest)
-@option Ease IN (7 - Circular easing)
-@option Ease IN (8 - Bounce back)
-
-@option -------------------
-
-@option Ease IN-OUT (1 - Smooth Linear)
-@option Ease IN-OUT (2 - Smoother Linear)
-@option Ease IN-OUT (3 - Non-Linear)
-@option Ease IN-OUT (4 - Fast)
-@option Ease IN-OUT (5 - Faster)
-@option Ease IN-OUT (6 - Fastest)
-@option Ease IN-OUT (7 - Circular easing)
-@option Ease IN-OUT (8 - Bounce back)
-
-@default Linear
-@desc Select whether to use linear or easing function
 */
 
 /*~struct~animationsetup:
@@ -1313,7 +1240,7 @@ If roll success/fail, it will affect all the next action effect until you reset 
 const TBSE = {}
 TBSE.init = function() {
     this._pluginName = document.currentScript.src.match(/.+\/(.+)\.js/)[1]
-    this._version = '0.1.220106'  // <Major>.<Minor>.<YYMMDD>
+    this._version = '0.1.220228'  // <Major>.<Minor>.<YYMMDD>
 
     this._addons = []           // Store addons name
     this._battlerSprites = {}   // Store battler sprites
@@ -1498,7 +1425,7 @@ TBSE.init = function() {
     //--------------------------------------------------------------------------------------------
     // Global function to check if any battler is doing action sequence
     this.isSequenceBusy = () => {
-        return TBSE.allBattlers().some(battler => battler.isDoingAction())
+        return TBSE.allBattlers().some(battler => battler.isDoingAction()) || SceneManager._scene._spriteset.doProjectilesExist()
     }
 
     // Function to get all battlers for convenience
@@ -1594,7 +1521,7 @@ TBSE.init = function() {
         outBack: t => {
             const c1 = 1.70158;
             const c3 = c1 + 1;
-            return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2)
+            return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2)
         },
 
         // In
@@ -1628,34 +1555,12 @@ TBSE.init = function() {
         
     }
 
+    // Map the function here
     this.Easings.getFunction = str => {
         const nameMap = {
-            "Ease OUT (1 - Smooth Linear)": TBSE.Easings.outSine,
-            "Ease OUT (2 - Smoother Linear)": TBSE.Easings.outQuad,
-            "Ease OUT (3 - Non-Linear)": TBSE.Easings.outCubic,
-            "Ease OUT (4 - Fast)": TBSE.Easings.outQuart,
-            "Ease OUT (5 - Faster)": TBSE.Easings.outQuint,
-            "Ease OUT (6 - Fastest)": TBSE.Easings.outExpo,
-            "Ease OUT (7 - Circular easing)": TBSE.Easings.outCirc,
-            "Ease OUT (8 - Bounce back)": TBSE.Easings.outBack,
-    
-            "Ease IN (1 - Smooth Linear)": TBSE.Easings.inSine,
-            "Ease IN (2 - Smoother Linear)": TBSE.Easings.inQuad,
-            "Ease IN (3 - Non-Linear)": TBSE.Easings.inCubic,
-            "Ease IN (4 - Fast)": TBSE.Easings.inQuart,
-            "Ease IN (5 - Faster)": TBSE.Easings.inQuint,
-            "Ease IN (6 - Fastest)": TBSE.Easings.inExpo,
-            "Ease IN (7 - Circular easing)": TBSE.Easings.inCirc,
-            "Ease IN (8 - Bounce back)": TBSE.Easings.inBack,
-    
-            "Ease IN-OUT (1 - Smooth Linear)": TBSE.Easings.inOutSine,
-            "Ease IN-OUT (2 - Smoother Linear)": TBSE.Easings.inOutQuad,
-            "Ease IN-OUT (3 - Non-Linear)": TBSE.Easings.inOutCubic,
-            "Ease IN-OUT (4 - Fast)": TBSE.Easings.inOutQuart,
-            "Ease IN-OUT (5 - Faster)": TBSE.Easings.inOutQuint,
-            "Ease IN-OUT (6 - Fastest)": TBSE.Easings.inOutExpo,
-            "Ease IN-OUT (7 - Circular easing)": TBSE.Easings.inOutCirc,
-            "Ease IN-OUT (8 - Bounce back)": TBSE.Easings.inOutBack,
+            "Smooth-Out": TBSE.Easings.outSine,
+            "Smooth-In": TBSE.Easings.inSine,
+            "Smooth-InOut": TBSE.Easings.inOutSine,
         }
         return nameMap[str] || TBSE.Easings[str] || TBSE.Easings.linear
     }
@@ -1707,7 +1612,6 @@ TBSE.init = function() {
 
     // Move command
     cmd.move = function(args){
-        args.movefn = (typeof args.movefn === "string" ? JSON.parse(args.movefn) : args.movefn)
         const spr = this.sprite();
         let targX = TBSE.evalNumber.call(this, args.x)
         let targY = TBSE.evalNumber.call(this, args.y)
@@ -1730,12 +1634,11 @@ TBSE.init = function() {
                 targY += this.homePos().y;
                 break;
         }
-        spr.goto(targX, targY, args.dur, args.jump, args.movefn.x, args.movefn.y)
+        spr.goto(targX, targY, TBSE.evalNumber(args.dur), TBSE.evalNumber(args.jump), args.fn, args.fn)
     }
 
     // Move command (target)
     cmd.moveTarget = function(args){
-        args.movefn = (typeof args.movefn === "string" ? JSON.parse(args.movefn) : args.movefn)
         const seq = this.sequencer()
         // Individual
         if(args.scope == "Individual"){
@@ -1757,7 +1660,7 @@ TBSE.init = function() {
                         targY += t.homePos().y;
                         break;
                 }
-                spr.goto(targX, targY, args.dur, args.jump, args.movefn.x, args.movefn.y)
+                spr.goto(targX, targY, TBSE.evalNumber(args.dur), TBSE.evalNumber(args.jump), args.fn, args.fn)
             }
 
         // Center Mass
@@ -2287,7 +2190,7 @@ TBSE.init = function() {
         opt.img = JSON.parse(args.img)
         opt.startpoint = JSON.parse(args.startpoint)
         opt.endpoint = JSON.parse(args.endpoint)
-        opt.movefn = JSON.parse(args.movefn)
+        opt.movefn = args.fn
         opt.user = this
         opt.itemInUse = JsonEx.makeDeepCopy(this.sequencer()._itemInUse)
 
@@ -2439,6 +2342,28 @@ TBSE.init = function() {
         }
         TBSE.Projectile._queue = [...TBSE.Projectile._queue, ...sprList]
     }
+
+    cmd.cam = function(args){
+        const spr = this.sprite();
+        let targX = TBSE.evalNumber.call(this, args.x)
+        let targY = TBSE.evalNumber.call(this, args.y)
+        if (this.isEnemy() && TBSE._invertX){ // necessary?
+            targX *= -1
+        }
+        switch(args.to){
+            case "Target":
+                const seq = this.sequencer()
+                const targets = seq._targetArray.length > 0 ? seq._targetArray : TBSE._affectedBattlers
+                targX += targets.reduce((total, trg)=>{ return trg.sprite().camRelativeX() + total}, 0) / targets.length
+                targY += targets.reduce((total, trg)=>{ return trg.sprite().camRelativeY() + total}, 0) / targets.length
+                break;
+            case "User":
+                targX += spr.camRelativeX();
+                targY += spr.camRelativeY();
+                break;
+        }
+        TBSE.Cam.startMove(targX, targY, TBSE.evalNumber(args.zoom), TBSE.evalNumber(args.dur), args.fn)
+    }
     //#endregion
     //=============================================================================================
 
@@ -2506,7 +2431,6 @@ TBSE.init = function() {
             const target = this._scaling.targetValue
             const fn = this._scaling.fnName
             const scale = TBSE.Easings.fn(init, target, t, tMax, fn)
-            console.log(scale)
             this.battler().sprite().scale.x = scale
             this.battler().sprite().scale.y = scale
             if(this._scaling.duration <= 0){
@@ -2574,7 +2498,7 @@ TBSE.init = function() {
         performActionSequence(){
             if (this._itemInUse){
                 const actionId = this._itemInUse._motion
-                this._interpreter.setup(actionId, "action", this.postAction, this)
+                this._interpreter.setup(actionId, "skill", this.postAction, this)
                 this.clearActionRecord()
             } 
         }
@@ -3010,7 +2934,7 @@ TBSE.init = function() {
         if (seq === undefined){
             return false
         }
-        return seq._interpreter._phaseName == "action" && !seq._interpreter.ending()
+        return (seq._interpreter._phaseName == "action" || seq._interpreter._phaseName == "skill") && !seq._interpreter.ending()
     }
 
     // Record result while clearing the damage popup
@@ -3281,7 +3205,7 @@ TBSE.init = function() {
     }
 
     sb.zFormula = function(){
-        return this._realY * 2
+        return this._realY * 2 + (this._battler.sequencer()._interpreter._phaseName == "skill" ? 1 : 0)
     }
     // Fadein
     sb.startFade = function(mode, dur, fn = "Linear"){
@@ -3323,11 +3247,26 @@ TBSE.init = function() {
     sb.jumpHeight = function(){
         if (this._tbseMoveDuration === 0) {
             return 0
-        }
-        const time = this._maxDuration - this._tbseMoveDuration
-        const gravity = this._jumpPower/(this._maxDuration/2);
-        const height = (this._jumpPower * time) - (gravity * time * (time + 1) / 2);
+        }    
+
+        const maxHeight = this._jumpPower
+        const halfTime = this._maxDuration/2
+        const g = maxHeight / (0.5 * Math.pow(halfTime, 2))
+        const v0 = ((0.5 * g * Math.pow(halfTime, 2)) + maxHeight)/halfTime
+
+        const time = (this._maxDuration - this._tbseMoveDuration) - 1
+        const height = (v0 * time) - (g * time * (time + 1) / 2);
         return Math.max(0, height);
+    }
+
+    // Relative X position for camera
+    sb.camRelativeX = function(){
+        return this.x - Graphics.boxWidth/2
+    }
+
+    // Relative Y position for camera
+    sb.camRelativeY = function(){
+        return this.y - Graphics.boxHeight/2
     }
     //#endregion
     //============================================================================================= 
@@ -3531,6 +3470,16 @@ TBSE.init = function() {
         this.blendMode = this._battler.sequencer()._blendMode
     }
 
+    TBSE.spriteEnemy.updateStateSpr = se.updateStateSprite
+    se.updateStateSprite = function(){
+        if(this._battler.dataBattler()._isAnimated){
+            this._stateIconSprite.y = -Math.round((this.height + 40) * 0.9);
+        } else {
+            TBSE.spriteEnemy.updateStateSpr.call(this);
+        }
+    }
+
+
     //#endregion
     //============================================================================================= 
     //#region Focus
@@ -3614,7 +3563,7 @@ TBSE.init = function() {
 
         loadAnimation(){
             // Load looped animation
-            const animloop = $dataAnimations[this._opt.img.anim]
+            const animloop = $dataAnimations[this._opt.img.animation]
             if (animloop){
                 const mv = Spriteset_Base.prototype.isMVAnimation(animloop)
                 this._animloop = new (mv ? TBSE.AnimationLoop_MV : TBSE.AnimationLoop)()
@@ -3647,7 +3596,6 @@ TBSE.init = function() {
             if(this._afterimages){
                 this._afterimages.update()
             }
-            //console.log(`${this.x} -- ${this.y}`)
         }
 
         updateDelay(){
@@ -3686,8 +3634,8 @@ TBSE.init = function() {
                 const lastx = this.x
                 const lasty = this.y
 
-                this.x = TBSE.Easings.fn(this._movement.startX, trgx, t, this._movement.maxDuration, this._opt.movefn.x)
-                this.y = TBSE.Easings.fn(this._movement.startY, trgy, t, this._movement.maxDuration, this._opt.movefn.y) + this.jumpHeight()
+                this.x = TBSE.Easings.fn(this._movement.startX, trgx, t, this._movement.maxDuration, this._opt.movefn)
+                this.y = TBSE.Easings.fn(this._movement.startY, trgy, t, this._movement.maxDuration, this._opt.movefn) - this.jumpHeight()
 
                 if(this._opt.img.autoAngle === "true"){
                     const diffx = this.x - lastx
@@ -3740,17 +3688,17 @@ TBSE.init = function() {
                         case "Top-Left":
                         case "Top-Mid":
                         case "Top-Right":
-                            return -spr.height + spr._realY + total
+                            return -spr.height + spr._realY + total - spr.jumpHeight()
                             
                         case "Mid-Left":
                         case "Middle":
                         case "Mid-Right":
-                            return -(spr.height/2) + spr._realY + total
+                            return -(spr.height/2) + spr._realY + total - spr.jumpHeight()
                             
                         case "Bottom-Left":
                         case "Bottom-Mid":
                         case "Bottom-Right":
-                            return spr._realY + total
+                            return spr._realY + total - spr.jumpHeight()
                     }
                 }else{
                     return t.y + total
@@ -3763,9 +3711,15 @@ TBSE.init = function() {
             if (this._movement.duration === 0) {
                 return 0
             }
-            const time = this._movement.maxDuration - this._movement.duration
-            const gravity = this._movement.jump/(this._movement.maxDuration/2);
-            return (this._movement.jump * time) - (gravity * time * (time + 1) / 2);
+
+            const maxHeight = this._movement.jump
+            const halfTime = this._movement.maxDuration/2
+            const g = maxHeight / (0.5 * Math.pow(halfTime, 2))
+            const v0 = ((0.5 * g * Math.pow(halfTime, 2)) + maxHeight)/halfTime
+            
+            const time = (this._movement.maxDuration - this._movement.duration) - 1
+            const height = (v0 * time) - (g * time * (time + 1) / 2);
+            return height
         }
 
         invokeEffect(){
@@ -3829,6 +3783,7 @@ TBSE.init = function() {
     }
 
     TBSE.Projectile._queue = []
+    TBSE.Projectile._onGoing = []
     TBSE.Projectile._expired = []
 
     //#endregion
@@ -3898,6 +3853,10 @@ TBSE.init = function() {
         }
     }
 
+    sset.doProjectilesExist = function(){
+        return TBSE.Projectile._onGoing.length > 0
+    }
+
     sset.updateProjectiles = function(){
         for(const prj of [...TBSE.Projectile._queue]){
             this._battleField.addChild(prj)
@@ -3905,6 +3864,7 @@ TBSE.init = function() {
                 this._battleField.addChild(prj._animloop)
             }
             TBSE.Projectile._queue.remove(prj)
+            TBSE.Projectile._onGoing.push(prj)
         }
         for(const prj of [...TBSE.Projectile._expired]){
             if (prj._animloop){
@@ -3912,6 +3872,7 @@ TBSE.init = function() {
             }
             prj.destroy()
             TBSE.Projectile._expired.remove(prj)
+            TBSE.Projectile._onGoing.remove(prj)
         }
     }
 
@@ -4103,6 +4064,76 @@ TBSE.init = function() {
         }
     }
     
+    // Overwrite
+    sset.updatePosition = function() {
+        const cam = TBSE.Cam;
+        const scale = TBSE.Cam._zoom;
+        this.scale.x = scale;
+        this.scale.y = scale;
+        this.x = cam.x()
+        this.y = cam.y()
+
+        // Compatibility patch (Requires Shake Screen v1.0.220228)
+        if(Theo && Theo.Shake){
+            const shake = Theo.Shake
+            if(shake.dur > 0){
+                let rate = shake.diminish ? shake.dur/shake.maxdur : 1.0;
+                this.x += Math.random() * shake.power * rate * (Math.random() >= 0.5 ? 1 : -1);
+                this.y += Math.random() * shake.power * rate * (Math.random() >= 0.5 ? 1 : -1);
+                shake.dur -= 1
+            }
+        }
+    };
+
+    TBSE.Camera = class {
+        constructor(){
+            this.clear()
+        }
+        
+        clear(){
+            this._camX = 0
+            this._camY = 0
+            this._zoom = 1
+            this._maxDuration = 0
+            this._duration = 0
+            this._camStartX = 0
+            this._camStartY = 0
+            this._camTargetX = 0
+            this._camTargetY = 0
+            this._fn = "Linear"
+        }
+
+        update(){
+            if(this._duration > 0){
+                this._duration -= 1;
+                const t = this._maxDuration - this._duration
+                this._camX = TBSE.Easings.fn(this._camStartX, this._camTargetX, t, this._maxDuration, this._fn)
+                this._camY = TBSE.Easings.fn(this._camStartY, this._camTargetY, t, this._maxDuration, this._fn)
+                this._zoom = TBSE.Easings.fn(this._camStartZoom, this._camTargetZoom, t, this._maxDuration, this._fn)
+            }
+        }
+
+        startMove(x, y, zoom, duration, fn = "Linear"){
+            this._camStartX = this._camX
+            this._camStartY = this._camY
+            this._camTargetX = x
+            this._camTargetY = y
+            this._camStartZoom = this._zoom
+            this._camTargetZoom = zoom
+            this._maxDuration = this._duration = duration
+            this._fn = fn
+        }
+
+        x(){
+            return (-this._camX * this._zoom) + Math.round(-(Graphics.boxWidth/2) * (this._zoom - 1))
+        }
+
+        y(){
+            return (-this._camY * this._zoom) + Math.round(-(Graphics.boxHeight/2) * (this._zoom - 1))
+        }
+    }
+    TBSE.Cam = new TBSE.Camera()
+
     //#endregion
     //============================================================================================= 
     //#region Animation handler for looping
@@ -4112,6 +4143,7 @@ TBSE.init = function() {
         onEnd(){
             this.setupDuration()
         }    
+
     }
 
     TBSE.AnimationLoop = class extends Sprite_Animation{
@@ -4161,6 +4193,8 @@ TBSE.init = function() {
             const grandparent = parent ? parent.parent : null;
             this.x = target._realX ? target._realX : target.x;
             this.y = target._realY ? target._realY : target.y;
+            this.x += target._offsetX ? target._offsetX : 0
+            this.y += target._offsetY ? target._offsetY : 0
             if (this.parent === grandparent) {
                 this.x += parent.x;
                 this.y += parent.y;
@@ -4288,6 +4322,12 @@ TBSE.init = function() {
         return success;
     };
 
+    TBSE.bm.setup = BattleManager.setup
+    BattleManager.setup = function(troopId, canEscape, canLose) {
+        TBSE.bm.setup.call(this, troopId, canEscape, canLose)
+        TBSE.Cam.clear()
+    };
+
     //============================================================================================= 
     // Scene Update
     //---------------------------------------------------------------------------------------------
@@ -4296,6 +4336,7 @@ TBSE.init = function() {
         TBSE.scene_battle_update.call(this);
         $gameParty.updateSequencer();
         $gameTroop.updateSequencer();
+        TBSE.Cam.update()
     };
 
     TBSE.scene_battle_terminate = Scene_Battle.prototype.terminate
